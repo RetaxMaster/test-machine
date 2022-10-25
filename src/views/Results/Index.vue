@@ -2,7 +2,9 @@
     <div class="bg-primary flex w-full h-full px-3 overflow-y-auto">
         <main class="container mx-auto py-10 text-white h-full">
 
-            <div v-if="thereWereBads" class="bg-teal-dark border-t-4 border-teal-darker rounded-b text-teal-900 px-4 py-3 shadow-md mb-10" role="alert">
+            <Counter />
+
+            <div v-if="thereWereBads" class="bg-teal-dark border-t-4 border-teal-darker rounded-b text-teal-900 px-4 py-3 shadow-md my-10" role="alert">
                 <div class="flex">
 
                     <div class="py-1 mr-3">
@@ -57,6 +59,7 @@
 
 import { getQuestions } from "@/api/questions";
 import QuestionResult from "@/components/QuestionResult.vue";
+import Counter from "@/components/Counter.vue";
 import { findQuestionById } from "@/utils/findQuestionById";
 
 export default {
@@ -64,7 +67,7 @@ export default {
     name: "Results",
 
     components: {
-        QuestionResult
+        QuestionResult, Counter
     },
 
     data() {
@@ -91,7 +94,6 @@ export default {
                 this.correctQuantity++;
             else
                 this.thereWereBads = true;
-
 
             this.questions.push({
                 question: question.question,

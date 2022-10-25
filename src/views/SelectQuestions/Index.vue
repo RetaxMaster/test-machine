@@ -25,3 +25,15 @@
         </main>
     </div>
 </template>
+
+<script>
+export default {
+
+    name: "SelectQuestions",
+
+    created() {
+        this.$store.commit("resetCounter");
+    }
+
+}
+</script>

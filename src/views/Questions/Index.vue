@@ -3,7 +3,7 @@
     <div class="bg-primary flex w-full h-full px-3 overflow-y-auto">
         <main class="container mx-auto py-10 text-white h-full">
 
-            <h1 class="text-center font-bold text-5xl">{{ counter }}</h1>
+            <Counter />
 
             <template v-if="seconds > 0">
                 <div class="bg-red-light border-2 border-red-dark text-red-700 px-4 py-3 rounded relative mt-10 hidden" role="alert" ref="error">
@@ -63,8 +63,11 @@
 <script>
 
 import Question from './Question.vue'
+import Counter from '@/components/Counter.vue'
 import { getQuestions } from "@/api/questions";
 import { findQuestionById } from "@/utils/findQuestionById";
+
+import { mapState } from 'vuex'
 
 export default {
     
@@ -75,36 +78,12 @@ export default {
             questions: getQuestions(this.$route.params.test),
             questionNumber: 0,
             activeFinishButton: false,
-            //seconds: 600,
-            seconds: 60,
-            counter: "10:00",
             selectedAnswer: null
         }
     },
 
     components: {
-        Question
-    },
-
-    created() {
-
-        const timerInterval = setInterval(() => {
-
-            this.seconds--;
-
-            const formatted = new Date(this.seconds * 1000)
-                .toISOString()
-                .substring(14, 19);
-
-            this.counter = formatted;
-            
-            if(this.seconds <= 0) {
-                clearInterval(timerInterval);
-                this.counter = "00:00";
-            }
-
-        }, 1000);
-
+        Question, Counter
     },
 
     computed: {
@@ -112,7 +91,9 @@ export default {
         // Las respuestas que ya ha marcado el usuario
         answers() {
             return this.$store.state.answers;
-        }
+        },
+
+        ...mapState(["seconds"]),
 
     },
 
@@ -148,6 +129,9 @@ export default {
 
             if ( this.isQuestionAnswered() ) {
 
+                // Valido si era la correcta para incrementar el contador
+                this.validateCorrectAnswer();
+
                 this.$router.push({
                     name: "Results",
                     params: {
@@ -176,20 +160,12 @@ export default {
             const question = findQuestionById(this.questions, selectedAnswerId);
 
             if (question.rightAnswer == this.selectedAnswer.answer)
-                this.addOneMinute();
+                this.$store.commit("addOneMinute");
             else
-                this.subtractOneMinute();
+                this.$store.commit("subtractOneMinute");
 
             this.selectedAnswer = null;
 
-        },
-
-        addOneMinute() {
-            this.seconds += 60;
-        },
-
-        subtractOneMinute() {
-            this.seconds -= 60;
         },
 
         isQuestionAnswered() {
