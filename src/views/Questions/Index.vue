@@ -1,9 +1,9 @@
 <template>
 
-    <div class="bg-dark flex w-full h-full px-3 overflow-y-auto">
+    <div class="bg-primary flex w-full h-full px-3 overflow-y-auto">
         <main class="container mx-auto py-10 text-white h-full">
 
-            <p>Con este sencillo test podrás repasar el zen de Python 🐍. No hay tiempo, no hay presiones, solo contesta las preguntas y aprende >:D.</p>
+            <h1 class="text-center font-bold text-5xl">{{ counter }}</h1>
 
             <div class="bg-red-light border-2 border-red-dark text-red-700 px-4 py-3 rounded relative mt-10 hidden" role="alert" ref="error">
                 <span class="block sm:inline font-bold">¡Selecciona una respuesta!</span>
@@ -25,14 +25,14 @@
                 <button 
                     v-if="!activeFinishButton"
                     type="button" 
-                    class="px-5 py-3 bg-secondary rounded ring-4" 
+                    class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
                     @click="nextQuestion"
                 >Siguiente</button>
 
                 <button 
                     v-else
                     type="button" 
-                    class="px-5 py-3 bg-secondary rounded ring-4" 
+                    class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
                     @click="finishTest"
                 >Terminar</button>
 
@@ -47,6 +47,7 @@
 
 import Question from './Question.vue'
 import { questions } from "@/api/questions";
+import { findQuestionById } from "@/utils/findQuestionById";
 
 export default {
     
@@ -56,12 +57,31 @@ export default {
         return {
             questions,
             questionNumber: 0,
-            activeFinishButton: false
+            activeFinishButton: false,
+            seconds: 600,
+            counter: "10:00",
+            selectedAnswer: null
         }
     },
 
     components: {
         Question
+    },
+
+    created() {
+
+        setInterval(() => {
+
+            const formatted = new Date(this.seconds * 1000)
+                .toISOString()
+                .substring(14, 19);
+
+            this.counter = formatted;
+            
+            this.seconds--;
+
+        }, 1000);
+
     },
 
     computed: {
@@ -91,6 +111,9 @@ export default {
                 if (this.questionNumber + 1 == totalQuestions)
                     this.activeFinishButton = true;
 
+                // Valido si era la correcta para incrementar el contador
+                this.validateCorrectAnswer();
+
             }
             else {
                 this.$refs["error"].classList.remove("hidden")
@@ -113,8 +136,28 @@ export default {
             
         },
 
-        addAnswer(data) {
-            this.$store.commit("addAnswer", data);
+        addAnswer(answer) {
+
+            // Lo inserto a la lista de preguntas con respuestas seleccionadas
+            this.$store.commit("addAnswer", answer);
+            this.selectedAnswer = answer;
+            
+        },
+
+        validateCorrectAnswer() {
+
+            const selectedAnswerId = this.selectedAnswer.questionId;
+            const question = findQuestionById(questions, selectedAnswerId);
+
+            if (question.rightAnswer == this.selectedAnswer.answer)
+                this.addOneMinute();
+
+            this.selectedAnswer = null;
+
+        },
+
+        addOneMinute() {
+            this.seconds += 60;
         },
 
         isQuestionAnswered() {

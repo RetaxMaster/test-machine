@@ -130,11 +130,13 @@ let colors = {
 
   // Custom colors
 
-  'primary': '#366d9c',
-  'secondary': '#f7cc42',
+  'primary': '#121f3d',
+  'secondary': '#121f3d',
   'dark': "#13193a",
   'hover-dark': "#1f274e",
-  'dirty-white': "#eaeaea"
+  'dirty-white': "#eaeaea",
+  'button': "#33b1ff",
+  'button-text': "#03091e"
 
 }
 
@@ -268,6 +270,9 @@ module.exports = {
     '3xl': '1.875rem',  // 30px
     '4xl': '2.25rem',   // 36px
     '5xl': '3rem',      // 48px
+    '6xl': '4rem',      
+    '7xl': '5rem',      
+    '8xl': '6rem',      
   },
 
 
@@ -478,6 +483,7 @@ module.exports = {
 
   width: {
     'auto': 'auto',
+    'plogo': '25px',
     'px': '1px',
     '1': '0.25rem',
     '2': '0.5rem',

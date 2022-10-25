@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-dark flex w-full h-full px-3 overflow-y-auto">
+    <div class="bg-primary flex w-full h-full px-3 overflow-y-auto">
         <main class="container mx-auto py-10 text-white h-full">
 
             <div v-if="thereWereBads" class="bg-teal-dark border-t-4 border-teal-darker rounded-b text-teal-900 px-4 py-3 shadow-md mb-10" role="alert">
@@ -48,6 +48,7 @@
 
 import { questions } from "@/api/questions";
 import QuestionResult from "@/components/QuestionResult.vue";
+import { findQuestionById } from "@/utils/findQuestionById";
 
 export default {
 
@@ -72,7 +73,7 @@ export default {
         for (const key in answers) {
 
             const id = parseInt( key.split("q-").pop() );
-            const question = this.findById(id);
+            const question = findQuestionById(questions, id);
             const isCorrect = this.isCorrect(question, answers[key]);
 
             if( !isCorrect )
@@ -88,19 +89,6 @@ export default {
     },
 
     methods: {
-
-        findById(id) {
-
-            let searchedQuestion = null;
-
-            questions.forEach(question => {
-                if(question.id === id)
-                    searchedQuestion = question;
-            });
-
-            return searchedQuestion;
-
-        },
 
         isCorrect(question, answer) {
             return question.rightAnswer === answer;

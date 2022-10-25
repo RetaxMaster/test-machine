@@ -1,6 +1,6 @@
 <template>
-    <picture class="block w-16">
-        <img src="@/assets/logo.png" alt="El zen de Python" class="w-full">
+    <picture class="block w-plogo">
+        <img src="@/assets/logo.webp" alt="El zen de Python" class="w-full">
     </picture>
 </template>
 
