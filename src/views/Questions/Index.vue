@@ -5,36 +5,53 @@
 
             <h1 class="text-center font-bold text-5xl">{{ counter }}</h1>
 
-            <div class="bg-red-light border-2 border-red-dark text-red-700 px-4 py-3 rounded relative mt-10 hidden" role="alert" ref="error">
-                <span class="block sm:inline font-bold">¡Selecciona una respuesta!</span>
-            </div>
+            <template v-if="seconds > 0">
+                <div class="bg-red-light border-2 border-red-dark text-red-700 px-4 py-3 rounded relative mt-10 hidden" role="alert" ref="error">
+                    <span class="block sm:inline font-bold">¡Selecciona una respuesta!</span>
+                </div>
+                
+                <div class="mt-10 flex flex-no-wrap overflow-hidden" ref="question-container">
+                     
+                    <Question 
+                        v-for="question in questions" 
+                        :key="question.id" 
+                        :question="question"
+                        @addAnswer="addAnswer"
+                    />
+                
+                </div>
+                
+                <div class="flex justify-end mt-5 pb-10">
+                
+                    <button 
+                        v-if="!activeFinishButton"
+                        type="button" 
+                        class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
+                        @click="nextQuestion"
+                    >Siguiente</button>
+                
+                    <button 
+                        v-else
+                        type="button" 
+                        class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
+                        @click="finishTest"
+                    >Terminar</button>
+                
+                </div>
+            </template>
 
-            <div class="mt-10 flex flex-no-wrap overflow-hidden" ref="question-container">
-                 
-                <Question 
-                    v-for="question in questions" 
-                    :key="question.id" 
-                    :question="question"
-                    @addAnswer="addAnswer"
-                />
+            <div v-else class="mt-10 pb-10">
 
-            </div>
+                <h1 class="text-center font-bold text-5xl">¡Tiempo agotado!</h1>
 
-            <div class="flex justify-end mt-5 pb-10">
+                <div class="flex justify-center mt-10 pb-10">
 
-                <button 
-                    v-if="!activeFinishButton"
-                    type="button" 
-                    class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
-                    @click="nextQuestion"
-                >Siguiente</button>
+                    <router-link
+                        :to="{name: 'SelectQuestions'}"
+                        class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4 no-underline"
+                    >Tomar otro test</router-link>
 
-                <button 
-                    v-else
-                    type="button" 
-                    class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4" 
-                    @click="finishTest"
-                >Terminar</button>
+                </div>
 
             </div>
 
@@ -58,7 +75,8 @@ export default {
             questions: getQuestions(this.$route.params.test),
             questionNumber: 0,
             activeFinishButton: false,
-            seconds: 600,
+            //seconds: 600,
+            seconds: 60,
             counter: "10:00",
             selectedAnswer: null
         }
@@ -70,7 +88,9 @@ export default {
 
     created() {
 
-        setInterval(() => {
+        const timerInterval = setInterval(() => {
+
+            this.seconds--;
 
             const formatted = new Date(this.seconds * 1000)
                 .toISOString()
@@ -78,7 +98,10 @@ export default {
 
             this.counter = formatted;
             
-            this.seconds--;
+            if(this.seconds <= 0) {
+                clearInterval(timerInterval);
+                this.counter = "00:00";
+            }
 
         }, 1000);
 
