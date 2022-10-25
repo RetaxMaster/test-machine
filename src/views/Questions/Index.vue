@@ -154,6 +154,8 @@ export default {
 
             if (question.rightAnswer == this.selectedAnswer.answer)
                 this.addOneMinute();
+            else
+                this.subtractOneMinute();
 
             this.selectedAnswer = null;
 
@@ -161,6 +163,10 @@ export default {
 
         addOneMinute() {
             this.seconds += 60;
+        },
+
+        subtractOneMinute() {
+            this.seconds -= 60;
         },
 
         isQuestionAnswered() {
