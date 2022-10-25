@@ -46,7 +46,7 @@
 <script>
 
 import Question from './Question.vue'
-import { questions } from "@/api/questions";
+import { getQuestions } from "@/api/questions";
 import { findQuestionById } from "@/utils/findQuestionById";
 
 export default {
@@ -55,7 +55,7 @@ export default {
 
     data() {
         return {
-            questions,
+            questions: getQuestions(this.$route.params.test),
             questionNumber: 0,
             activeFinishButton: false,
             seconds: 600,
@@ -126,7 +126,10 @@ export default {
             if ( this.isQuestionAnswered() ) {
 
                 this.$router.push({
-                    name: "Results"
+                    name: "Results",
+                    params: {
+                        test: this.$route.params.test
+                    }
                 });
 
             }
@@ -147,7 +150,7 @@ export default {
         validateCorrectAnswer() {
 
             const selectedAnswerId = this.selectedAnswer.questionId;
-            const question = findQuestionById(questions, selectedAnswerId);
+            const question = findQuestionById(this.questions, selectedAnswerId);
 
             if (question.rightAnswer == this.selectedAnswer.answer)
                 this.addOneMinute();

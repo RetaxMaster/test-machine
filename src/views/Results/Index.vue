@@ -10,8 +10,8 @@
                     </div>
 
                     <div>
-                        <p class="font-bold">¡No te preocupes si no acertaste todas!</p>
-                        <p class="text-sm mt-2">Estamos aprendiendo, pero te apuesto a que si sigues repasando te lo aprendes >:D.</p>
+                        <p class="font-bold">¡Suerte para la próxima!</p>
+                        <p class="text-sm mt-2">Lograste ayudar a tu profesor con {{ correctQuantity }} minutos 😈.</p>
                     </div>
 
                 </div>
@@ -21,12 +21,12 @@
                 <div class="flex">
 
                     <div class="py-1 mr-3">
-                        🐍
+                        😵‍💫
                     </div>
 
                     <div>
                         <p class="font-bold">¡Felicidades!</p>
-                        <p class="text-sm mt-2">Ya estás list@ para ser un Pythonista de verdad 😈.</p>
+                        <p class="text-sm mt-2">Acertaste todas las preguntas. Le diste a tu profesor {{ correctQuantity }} minutos extra 🤩.</p>
                     </div>
 
                 </div>
@@ -40,13 +40,22 @@
                 />
             </div>
 
+            <div class="flex justify-center mt-5 pb-10">
+
+                <router-link
+                    :to="{name: 'SelectQuestions'}"
+                    class="px-5 py-3 bg-button text-button-text font-bold uppercase rounded ring-4 no-underline"
+                >Tomar otro test</router-link>
+
+            </div>
+
         </main>
     </div>
 </template>
 
 <script>
 
-import { questions } from "@/api/questions";
+import { getQuestions } from "@/api/questions";
 import QuestionResult from "@/components/QuestionResult.vue";
 import { findQuestionById } from "@/utils/findQuestionById";
 
@@ -60,6 +69,7 @@ export default {
 
     data() {
         return {
+            correctQuantity: 0,
             questions: [],
             thereWereBads: false
         }
@@ -68,6 +78,7 @@ export default {
     created() {
 
         const answers = this.$store.state.answers;
+        const questions = getQuestions(this.$route.params.test);
 
         // Recorremos cada respuesta del usuario para generar un nuevo array en this.answers con la pregunta y el estado de si es correcta o no
         for (const key in answers) {
@@ -76,8 +87,11 @@ export default {
             const question = findQuestionById(questions, id);
             const isCorrect = this.isCorrect(question, answers[key]);
 
-            if( !isCorrect )
+            if( isCorrect )
+                this.correctQuantity++;
+            else
                 this.thereWereBads = true;
+
 
             this.questions.push({
                 question: question.question,
