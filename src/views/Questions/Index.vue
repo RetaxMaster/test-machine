@@ -56,6 +56,12 @@
             </div>
 
         </main>
+
+        <Alert
+            :isRight="isRight"
+            :display="display"
+        />
+
     </div>
     
 </template>
@@ -64,6 +70,7 @@
 
 import Question from './Question.vue'
 import Counter from '@/components/Counter.vue'
+import Alert from '@/components/Alert.vue'
 import { getQuestions } from "@/api/questions";
 import { findQuestionById } from "@/utils/findQuestionById";
 
@@ -78,12 +85,14 @@ export default {
             questions: getQuestions(this.$route.params.test),
             questionNumber: 0,
             activeFinishButton: false,
-            selectedAnswer: null
+            selectedAnswer: null,
+            isRight: false,
+            display: false,
         }
     },
 
     components: {
-        Question, Counter
+        Question, Counter, Alert
     },
 
     computed: {
@@ -159,13 +168,25 @@ export default {
             const selectedAnswerId = this.selectedAnswer.questionId;
             const question = findQuestionById(this.questions, selectedAnswerId);
 
-            if (question.rightAnswer == this.selectedAnswer.answer)
+            if (question.rightAnswer == this.selectedAnswer.answer) {
                 this.$store.commit("addOneMinute");
-            else
+                this.displayAlert(true);
+            }
+            else {
                 this.$store.commit("subtractOneMinute");
+                this.displayAlert(false);
+            }
 
             this.selectedAnswer = null;
 
+        },
+
+        displayAlert(isRight) {
+            this.isRight = isRight;
+            this.display = true;
+            setTimeout(() => {
+                this.display = false;
+            }, 1000);
         },
 
         isQuestionAnswered() {

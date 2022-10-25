@@ -5,5 +5,3 @@ import store from './store'
 import router from './router'
 
 createApp(App).use(router).use(store).mount('#app')
-
-// TODO: Feedback de correcto o incorrecto al instante
