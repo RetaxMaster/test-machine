@@ -3,23 +3,15 @@
         <main class="container mx-auto py-10 text-white h-full">
             
             <router-link
+                v-for="test in allTopics"
+                :key="test.slug"
                 :to="{
                     name: 'Questions',
-                    params: { test: 'pensamiento-logico' }
+                    params: { test: test.slug }
                 }"
                 class="mt-3 border border-dirty-white rounded px-5 py-4 cursor-pointer highlight block text-white no-underline"
             >
-                🧠 Pensamiento lógico
-            </router-link>
-
-            <router-link
-                :to="{
-                    name: 'Questions',
-                    params: { test: 'otro-tema' }
-                }"
-                class="mt-3 border border-dirty-white rounded px-5 py-4 cursor-pointer highlight block text-white no-underline"
-            >
-                🧠 Otro tema
+                {{ test.name }}
             </router-link>
 
         </main>
@@ -27,9 +19,18 @@
 </template>
 
 <script>
+
+import { getAllTopics } from "@/api/questions";
+
 export default {
 
     name: "SelectQuestions",
+
+    data() {
+        return {
+            allTopics: getAllTopics()
+        }
+    },
 
     created() {
         this.$store.commit("resetCounter");
