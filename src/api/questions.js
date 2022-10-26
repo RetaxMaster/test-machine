@@ -1,16 +1,16 @@
 import { pensamientoLogico } from "./pensamiento-logico";
-import { otroTema } from "./otro-tema";
+import { wordpress } from "./wordpress";
 
 const questions = [
     {
         questions: pensamientoLogico,
         name: "🧠 Pensamiento lógico",
-        slug: "pensamiento-logico"
+        slug: "pensamiento-loco"
     },
     {
-        questions: otroTema,
-        name: "🧠 Otro tema",
-        slug: "otro-tema"
+        questions: wordpress,
+        name: "🐘 WordPress",
+        slug: "wordpress"
     },
 ];
 

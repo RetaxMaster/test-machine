@@ -168,7 +168,7 @@ export default {
             const selectedAnswerId = this.selectedAnswer.questionId;
             const question = findQuestionById(this.questions, selectedAnswerId);
 
-            if (question.rightAnswer == this.selectedAnswer.answer) {
+            if ((question.rightAnswer - 1) == this.selectedAnswer.answer) {
                 this.$store.commit("addOneMinute");
                 this.displayAlert(true);
             }

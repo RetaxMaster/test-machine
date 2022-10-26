@@ -107,7 +107,7 @@ export default {
     methods: {
 
         isCorrect(question, answer) {
-            return question.rightAnswer === answer;
+            return (question.rightAnswer - 1) === answer;
         }
 
     }

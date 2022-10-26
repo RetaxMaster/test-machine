@@ -1,6 +1,6 @@
 <template>
     
-    <div class="mt-3 border-2 border-dirty-white rounded px-5 py-4 cursor-pointer highlight" :class="{ 'active': answer.isActive }" @click="selectAnswer">
+    <div class="mt-3 border border-dirty-white rounded px-5 py-4 cursor-pointer highlight" :class="{ 'active': answer.isActive }" @click="selectAnswer">
         <p>{{ answer.answer }}</p>
     </div>
 
